@@ -1,7 +1,11 @@
 import dash
 import dash_core_components as dcc
 import dash_html_components as html
+import dash_auth
 import plotly.graph_objs as go
+import os
+import ast
+
 
 ########### Define your variables
 beers=['Chesapeake Stout', 'Snake Dog IPA', 'Imperial Porter', 'Double Dog IPA']
@@ -16,6 +20,7 @@ label1='IBU'
 label2='ABV'
 githublink='https://github.com/zohartal/flying-dog-beers'
 sourceurl='https://www.flyingdog.com/beers/'
+VALID_USERNAME_PASSWORD_PAIRS = ast.literal_eval(os.environ.get('VALID_USERNAME_PASSWORD_PAIRS'))
 
 ########### Set up the chart
 bitterness = go.Bar(
@@ -43,6 +48,11 @@ beer_fig = go.Figure(data=beer_data, layout=beer_layout)
 ########### Initiate the app
 external_stylesheets = ['https://codepen.io/chriddyp/pen/bWLwgP.css']
 app = dash.Dash(__name__, external_stylesheets=external_stylesheets)
+auth = dash_auth.BasicAuth(
+    app,
+    VALID_USERNAME_PASSWORD_PAIRS
+)
+
 server = app.server
 app.title=tabtitle
 
@@ -60,4 +70,6 @@ app.layout = html.Div(children=[
 )
 
 if __name__ == '__main__':
+    #print ("VALID_USERNAME_PASSWORD_PAIRS="+VALID_USERNAME_PASSWORD_PAIRS)
+    #exit(1)
     app.run_server()
